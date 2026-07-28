@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sebas CarWash v3.0</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#b91c1c">
+
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="topbar">
+
+<div class="logo">
+
+<h1>🚗 Sebas CarWash</h1>
+
+<p>Control Personal</p>
+
+</div>
+
+<div class="perfil">
+
+<div class="foto">
+
+👤
+
+</div>
+
+<div>
+
+<h3>Sebas Ditillo</h3>
+
+<span>Lavador de Vehículos</span>
+
+</div>
+
+</div>
+
+</header>
+
+<section class="hero">
+
+<div class="hero-text">
+
+<h2>Bienvenido</h2>
+
+<p>Controla tus ganancias diarias de forma rápida y sencilla.</p>
+
+</div>
+
+<div class="hero-image">
+
+<img src="portada.jpg.jpeg" alt="Portada">
+
+</div>
+
+</section>
+<section class="dashboard">
+
+<div class="card resumen">
+
+<h2>💰 Ganancia de Hoy</h2>
+
+<h1 id="ganancia">$0.00</h1>
+
+<p>Tu 40% se calculará automáticamente.</p>
+
+</div>
+
+<div class="card">
+
+<h3>📊 Resumen del Día</h3>
+
+<div class="resumen-grid">
+
+<div>
+<strong id="motos">0</strong>
+<p>Motos</p>
+</div>
+
+<div>
+<strong id="carros">0</strong>
+<p>Carros</p>
+</div>
+
+<div>
+<strong id="camionetas">0</strong>
+<p>Camionetas</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="acciones">
+
+<h2>Registrar Vehículo</h2>
+
+<button class="btn moto">
+🏍️ Moto Normal ($3)
+</button>
+
+<button class="btn cera">
+✨ Moto con Cera ($5)
+</button>
+
+<button class="btn carro">
+🚗 Carro ($7)
+</button>
+
+<button class="btn camioneta">
+🚙 Camioneta ($15)
+</button>
+
+</section>
+<section class="historial">
+
+<h2>📋 Historial Reciente</h2>
+
+<div id="historial">
+
+<div class="vacio">
+Todavía no has registrado ningún vehículo.
+</div>
+
+</div>
+
+</section>
+
+<nav class="menu-inferior">
+
+<button id="inicio">
+🏠
+<span>Inicio</span>
+</button>
+
+<button id="estadisticas">
+📊
+<span>Estadísticas</span>
+</button>
+
+<button id="historialBtn">
+📋
+<span>Historial</span>
+</button>
+
+<button id="ajustes">
+⚙️
+<span>Ajustes</span>
+</button>
+
+</nav>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
