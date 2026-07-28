@@ -1,5 +1,5 @@
 // ===============================
-// SEBAS CARWASH V3.0
+// winder CARWASH V3.0
 // ===============================
 
 let ganancia = 0;
@@ -84,11 +84,10 @@ function guardarDatos() {
         historial: historial.innerHTML
     };
 
-    localStorage.setItem("sebasCarWash", JSON.stringify(datos));
-}
+   localStorage.setItem("winderCarWash", JSON.stringify(datos));
 
 function cargarDatos() {
-    const datos = JSON.parse(localStorage.getItem("sebasCarWash"));
+    const datos = JSON.parse(localStorage.getItem("winderCarWash"));
 
     if (!datos) return;
 
