@@ -238,3 +238,540 @@
     </div>
 
     <div class="grid grid-2">
+<div class="card">
+        <div class="section-title">Últimos lavados <span class="link" data-view="historial">Ver historial →</span></div>
+        <table id="recent-table"><thead><tr><th>Cliente</th><th>Placa</th><th>Servicio</th><th>Precio</th><th>Comisión</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="card">
+        <div class="section-title">Servicios de hoy por tipo</div>
+        <div class="chart-wrap"><canvas id="chart-today"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUEVO LAVADO -->
+  <section class="view" id="view-nuevo">
+    <div class="topbar">
+      <div>
+        <h1>Nuevo lavado</h1>
+        <div class="sub">Registra cliente, vehículo y servicio</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="section-title">Datos del cliente</div>
+        <div class="field"><label>Nombre del cliente</label><input id="f-nombre" placeholder="Juan Pérez"></div>
+        <div class="field-row">
+          <div class="field"><label>Cédula</label><input id="f-cedula" placeholder="12.345.678"></div>
+          <div class="field"><label>Teléfono</label><input id="f-telefono" placeholder="0412-1234567"></div>
+        </div>
+
+        <div class="section-title" style="margin-top:8px;">Vehículo</div>
+        <div class="field"><label>Placa</label><input id="f-placa" placeholder="AB123CD" style="text-transform:uppercase;"></div>
+        <div class="photo-box" id="photo-box" onclick="document.getElementById('f-foto').click()">
+          <input type="file" accept="image/*" id="f-foto" style="display:none">
+          <span id="photo-label">📷 Tomar / adjuntar foto de la placa</span>
+        </div>
+
+        <div class="section-title">Tipo de servicio</div>
+        <div class="service-grid" id="service-grid"></div>
+
+        <div class="summary-box">
+          <div class="card">
+            <div class="stat-label">Precio del servicio</div>
+            <div class="stat-value blue" id="f-precio">$0.00</div>
+          </div>
+          <div class="card">
+            <div class="stat-label">Comisión total (40%)</div>
+            <div class="stat-value aqua" id="f-comision">$0.00</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-ghost" onclick="resetForm()">Cancelar registro</button>
+          <button class="btn btn-primary" onclick="guardarLavado()">Guardar lavado</button>
+        </div>
+      </div>
+
+      <div class="card" style="height:fit-content;">
+        <div class="section-title">Precios de referencia</div>
+        <table>
+          <tbody id="price-ref"></tbody>
+        </table>
+        <div class="section-title" style="margin-top:18px;">Cómo se reparte</div>
+        <p style="font-size:12.5px; color:var(--mist); line-height:1.6;">
+          El 40% del precio del servicio se calcula automáticamente como comisión. Ese monto se divide entre los 2 trabajadores del taller — puedes ajustar esta lógica en cuanto confirmes el reparto exacto con la cajera.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORIAL -->
+  <section class="view" id="view-historial">
+    <div class="topbar">
+      <div>
+        <h1>Historial de lavados</h1>
+        <div class="sub">Busca, edita o elimina un registro</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="search-bar">
+        <input id="search-input" placeholder="Buscar por placa o nombre del cliente…" oninput="renderHistorial()">
+      </div>
+      <table>
+        <thead><tr><th>#</th><th>Fecha</th><th>Cliente</th><th>Placa</th><th>Servicio</th><th>Precio</th><th>Comisión</th><th></th></tr></thead>
+        <tbody id="historial-table"></tbody>
+      </table>
+      <div class="empty" id="historial-empty" style="display:none;">Aún no hay lavados registrados.</div>
+    </div>
+  </section>
+
+  <!-- REPORTES -->
+  <section class="view" id="view-reportes">
+    <div class="topbar">
+      <div>
+        <h1>Reportes y estadísticas</h1>
+        <div class="sub">Resumen semanal por trabajador</div>
+      </div>
+    </div>
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="section-title">Ventas últimos 7 días</div>
+        <div class="chart-wrap"><canvas id="chart-week"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="section-title">Servicios por tipo (histórico)</div>
+        <div class="chart-wrap"><canvas id="chart-types"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">
+        Reporte semanal
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary" style="padding:8px 14px; font-size:13px; background:linear-gradient(135deg,#2e9bf0,#1c6fb0);" onclick="generatePDF()">📄 Generar PDF</button>
+          <button class="btn btn-primary" style="padding:8px 14px; font-size:13px; background:linear-gradient(135deg,#1fbf8f,#17a374);" onclick="shareWhatsApp()">📲 Compartir por WhatsApp</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Servicio</th><th>Cantidad</th><th>Total vendido</th><th>Comisión (40%)</th><th>Por trabajador</th></tr></thead>
+        <tbody id="report-table"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PAGO MOVIL -->
+  <section class="view" id="view-pago">
+    <div class="topbar">
+      <div>
+        <h1>Pago móvil y datos de cobro</h1>
+        <div class="sub">Comparte esto con tus clientes o con la jefa para que paguen rápido</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="section-title">Datos de la cuenta</div>
+        <table>
+          <tbody>
+            <tr><td style="color:var(--mist);">Banco</td><td style="text-align:right;">0105 - Banco Mercantil, C.A.</td></tr>
+            <tr><td style="color:var(--mist);">Titular</td><td style="text-align:right;">Sebastián Ditillo</td></tr>
+            <tr><td style="color:var(--mist);">Cédula</td><td style="text-align:right;">V-32.697.978</td></tr>
+            <tr><td style="color:var(--mist);">Teléfono</td><td style="text-align:right;">0424-236.49.61</td></tr>
+          </tbody>
+        </table>
+        <button class="btn btn-ghost" style="width:100%; margin-top:14px;" onclick="copyPagoMovil()">📋 Copiar datos</button>
+      </div>
+
+      <div class="card" style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+        <div class="section-title" style="width:100%;">Código QR</div>
+        <div style="width:200px; height:200px; border:1.5px dashed var(--line); border-radius:10px; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px; color:var(--mist); font-size:12px;">
+          📷 Agrega aquí la imagen de tu QR de pago móvil (foto que te dio tu banco)
+        </div>
+        <p style="font-size:12px; color:var(--mist); margin-top:10px;">Escanéalo desde la app de tu banco para pagar directo.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <p style="font-size:12.5px; color:var(--mist); line-height:1.6;">
+        Comparte tu reporte semanal junto con estos datos para que la jefa haga el pago con toda la información en un solo mensaje. Usa el botón "Compartir por WhatsApp" en la sección de Reportes.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3>Eliminar registro</h3>
+    <p style="font-size:13px; color:var(--mist); margin-bottom:18px;">Esto eliminará el lavado y recalculará las ganancias automáticamente. ¿Confirmas?</p>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--coral),#b23a30)" onclick="confirmDelete()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SERVICES = [
+  {key:'moto',       name:'Moto normal',    price:3,  tag:'moto'},
+  {key:'moto_cera',  name:'Moto con cera',  price:5,  tag:'moto'},
+  {key:'carro',      name:'Carro',          price:7,  tag:'carro'},
+  {key:'camioneta',  name:'Camioneta',      price:15, tag:'camioneta'},
+  {key:'completo',   name:'Lavado completo',price:25, tag:'completo'},
+];
+const COMISION_PORC = 0.4;
+const TRABAJADORES = 2;
+
+let lavados = [];
+try {
+  lavados = JSON.parse(localStorage.getItem('seba_lavados') || '[]');
+  if(!Array.isArray(lavados)) lavados = [];
+} catch(e) {
+  lavados = [];
+  localStorage.removeItem('seba_lavados');
+}
+let selectedService = null;
+let selectedPhoto = null;
+let pendingDeleteId = null;
+
+function save(){ localStorage.setItem('seba_lavados', JSON.stringify(lavados)); }
+function money(n){ return '$' + n.toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+function todayStr(){ return new Date().toLocaleDateString('es-VE', {weekday:'long', day:'numeric', month:'long'}); }
+function isToday(iso){ const d=new Date(iso), n=new Date(); return d.toDateString()===n.toDateString(); }
+
+document.querySelectorAll('[data-view]').forEach(el=>{
+  el.addEventListener('click', ()=>showView(el.dataset.view));
+});
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+  if(name==='historial') renderHistorial();
+  if(name==='reportes') renderReportes();
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function buildServiceGrid(){
+  const grid=document.getElementById('service-grid');
+  grid.innerHTML='';
+  SERVICES.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='service-opt'; d.dataset.key=s.key;
+    d.innerHTML=`<span class="sname">${s.name}</span><span class="sprice">${money(s.price)}</span>`;
+    d.onclick=()=>selectService(s.key);
+    grid.appendChild(d);
+  });
+}
+function selectService(key){
+  selectedService = SERVICES.find(s=>s.key===key);
+  document.querySelectorAll('.service-opt').forEach(el=>el.classList.toggle('selected', el.dataset.key===key));
+  const precio = selectedService.price;
+  document.getElementById('f-precio').textContent = money(precio);
+  document.getElementById('f-comision').textContent = money(precio*COMISION_PORC);
+}
+function buildPriceRef(){
+  const tb=document.getElementById('price-ref');
+  tb.innerHTML = SERVICES.map(s=>`<tr><td>${s.name}</td><td style="text-align:right; color:var(--aqua); font-weight:600;">${money(s.price)}</td></tr>`).join('');
+}
+
+document.getElementById('f-foto').addEventListener('change', e=>{
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    selectedPhoto = ev.target.result;
+    const box=document.getElementById('photo-box');
+    box.classList.add('has-photo');
+    document.getElementById('photo-label').innerHTML = `<img src="${selectedPhoto}"><div style="margin-top:6px;">Foto cargada — toca para cambiar</div>`;
+  };
+  reader.readAsDataURL(file);
+});
+
+function resetForm(){
+  document.getElementById('f-nombre').value='';
+  document.getElementById('f-cedula').value='';
+  document.getElementById('f-telefono').value='';
+document.getElementById('f-placa').value='';
+  selectedService=null; selectedPhoto=null;
+  document.querySelectorAll('.service-opt').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('f-precio').textContent='$0.00';
+  document.getElementById('f-comision').textContent='$0.00';
+  const box=document.getElementById('photo-box');
+  box.classList.remove('has-photo');
+  document.getElementById('photo-label').textContent='📷 Tomar / adjuntar foto de la placa';
+  document.getElementById('f-foto').value='';
+}
+
+function guardarLavado(){
+  const nombre=document.getElementById('f-nombre').value.trim();
+  const placa=document.getElementById('f-placa').value.trim().toUpperCase();
+  if(!nombre){ toast('Falta el nombre del cliente'); return; }
+  if(!placa){ toast('Falta la placa del vehículo'); return; }
+  if(!selectedService){ toast('Selecciona un tipo de servicio'); return; }
+
+  const registro={
+    id: Date.now(),
+    fecha: new Date().toISOString(),
+    cliente: nombre,
+    cedula: document.getElementById('f-cedula').value.trim(),
+    telefono: document.getElementById('f-telefono').value.trim(),
+    placa: placa,
+    servicioKey: selectedService.key,
+    servicio: selectedService.name,
+    tag: selectedService.tag,
+    precio: selectedService.price,
+    comision: +(selectedService.price*COMISION_PORC).toFixed(2),
+    foto: selectedPhoto,
+  };
+  lavados.unshift(registro);
+  save();
+  toast('Lavado guardado correctamente');
+  resetForm();
+  renderDashboard();
+  showView('inicio');
+}
+
+let chartToday, chartWeek, chartTypes;
+
+function renderDashboard(){
+  document.getElementById('today-pill').textContent = todayStr();
+  const hoy = lavados.filter(l=>isToday(l.fecha));
+  const total = hoy.reduce((a,l)=>a+l.precio,0);
+  const comision = hoy.reduce((a,l)=>a+l.comision,0);
+  document.getElementById('stat-total').textContent = money(total);
+  document.getElementById('stat-comision').textContent = money(comision);
+  document.getElementById('stat-porpersona').textContent = money(comision/TRABAJADORES);
+  document.getElementById('stat-servicios').textContent = hoy.length;
+
+  const tbody = document.querySelector('#recent-table tbody');
+  const recientes = lavados.slice(0,5);
+  tbody.innerHTML = recientes.length ? recientes.map(l=>`
+    <tr>
+      <td>${l.cliente}</td>
+      <td>${l.placa}</td>
+      <td><span class="tag ${l.tag}">${l.servicio}</span></td>
+      <td>${money(l.precio)}</td>
+      <td style="color:var(--aqua)">${money(l.comision)}</td>
+    </tr>`).join('') : `<tr><td colspan="5" style="color:var(--mist); text-align:center; padding:24px 0;">Aún no hay lavados hoy</td></tr>`;
+
+  const counts = {};
+  SERVICES.forEach(s=>counts[s.name]=0);
+  hoy.forEach(l=>counts[l.servicio]=(counts[l.servicio]||0)+1);
+  const ctx = document.getElementById('chart-today');
+  if(chartToday) chartToday.destroy();
+  chartToday = new Chart(ctx, {
+    type:'doughnut',
+    data:{ labels:Object.keys(counts), datasets:[{ data:Object.values(counts),
+      backgroundColor:['#2e9bf0','#26c6da','#1fbf8f','#f0a63a','#f0665a'], borderWidth:0 }]},
+    options:{ plugins:{legend:{position:'bottom', labels:{color:'#9fb6cc', font:{size:11}, boxWidth:10}}}, cutout:'65%' }
+  });
+}
+
+function renderHistorial(){
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const filtered = lavados.filter(l => !q || l.placa.toLowerCase().includes(q) || l.cliente.toLowerCase().includes(q));
+  const tbody = document.getElementById('historial-table');
+  document.getElementById('historial-empty').style.display = lavados.length ? 'none':'block';
+  tbody.innerHTML = filtered.map((l,i)=>`
+    <tr>
+      <td>${lavados.length-lavados.indexOf(l)}</td>
+      <td>${new Date(l.fecha).toLocaleString('es-VE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
+      <td>${l.cliente}</td>
+      <td>${l.placa}</td>
+      <td><span class="tag ${l.tag}">${l.servicio}</span></td>
+      <td>${money(l.precio)}</td>
+      <td style="color:var(--aqua)">${money(l.comision)}</td>
+      <td><div class="row-actions">
+        <button onclick="editLavado(${l.id})">Editar</button>
+        <button class="danger" onclick="askDelete(${l.id})">Eliminar</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function editLavado(id){
+  const l = lavados.find(x=>x.id===id);
+  if(!l) return;
+  showView('nuevo');
+  document.getElementById('f-nombre').value=l.cliente;
+  document.getElementById('f-cedula').value=l.cedula;
+  document.getElementById('f-telefono').value=l.telefono;
+  document.getElementById('f-placa').value=l.placa;
+  selectService(l.servicioKey);
+  lavados = lavados.filter(x=>x.id!==id);
+  save();
+  toast('Editando lavado — guarda para actualizar');
+}
+
+function askDelete(id){ pendingDeleteId=id; document.getElementById('modal-bg').classList.add('show'); }
+function closeModal(){ pendingDeleteId=null; document.getElementById('modal-bg').classList.remove('show'); }
+function confirmDelete(){
+  lavados = lavados.filter(x=>x.id!==pendingDeleteId);
+  save();
+  closeModal();
+  toast('Registro eliminado, ganancias recalculadas');
+  renderHistorial();
+  renderDashboard();
+}
+
+function renderReportes(){
+  const days=[]; const totals=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const label=d.toLocaleDateString('es-VE',{weekday:'short'});
+    const dayTotal=lavados.filter(l=>new Date(l.fecha).toDateString()===d.toDateString()).reduce((a,l)=>a+l.precio,0);
+    days.push(label); totals.push(dayTotal);
+  }
+  const ctxW=document.getElementById('chart-week');
+  if(chartWeek) chartWeek.destroy();
+  chartWeek = new Chart(ctxW,{
+    type:'line',
+    data:{ labels:days, datasets:[{ data:totals, borderColor:'#26c6da', backgroundColor:'rgba(38,198,218,.12)', fill:true, tension:.35, pointBackgroundColor:'#26c6da' }]},
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#9fb6cc'}, grid:{color:'#1a3654'}}, y:{ticks:{color:'#9fb6cc'}, grid:{color:'#1a3654'}} } }
+  });
+
+  const counts={}; SERVICES.forEach(s=>counts[s.name]=0);
+  lavados.forEach(l=>counts[l.servicio]=(counts[l.servicio]||0)+1);
+  const ctxT=document.getElementById('chart-types');
+  if(chartTypes) chartTypes.destroy();
+  chartTypes = new Chart(ctxT,{
+    type:'bar',
+    data:{ labels:Object.keys(counts), datasets:[{ data:Object.values(counts), backgroundColor:'#2e9bf0', borderRadius:6 }]},
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#9fb6cc'}, grid:{display:false}}, y:{ticks:{color:'#9fb6cc'}, grid:{color:'#1a3654'}} } }
+  });
+
+  const tbody=document.getElementById('report-table');
+  tbody.innerHTML = SERVICES.map(s=>{
+    const items = lavados.filter(l=>l.servicioKey===s.key);
+    const total = items.reduce((a,l)=>a+l.precio,0);
+    const com = total*COMISION_PORC;
+    return `<tr>
+      <td><span class="tag ${s.tag}">${s.name}</span></td>
+      <td>${items.length}</td>
+      <td>${money(total)}</td>
+      <td style="color:var(--aqua)">${money(com)}</td>
+      <td style="color:var(--teal)">${money(com/TRABAJADORES)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function shareWhatsApp(){
+  const hoy = new Date().toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit',year:'numeric'});
+  let totalGeneral=0, comisionGeneral=0;
+  let lineas = SERVICES.map(s=>{
+    const items = lavados.filter(l=>l.servicioKey===s.key);
+    const total = items.reduce((a,l)=>a+l.precio,0);
+    const com = total*COMISION_PORC;
+    totalGeneral += total; comisionGeneral += com;
+    return `• ${s.name}: ${items.length} lavados — ${money(total)}`;
+  }).join('\n');
+
+  const mensaje =
+`*SEBA CARWASH — Reporte semanal*\n`+
+`Fecha de corte: ${hoy}\n\n`+
+`${lineas}\n\n`+
+`Total vendido: ${money(totalGeneral)}\n`+
+`Comisión (40%): ${money(comisionGeneral)}\n`+
+`Por trabajador (÷2): ${money(comisionGeneral/TRABAJADORES)}`;
+
+  const url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(mensaje);
+  window.open(url, '_blank');
+}
+
+function generatePDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const hoy = new Date().toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit',year:'numeric'});
+
+  doc.setFillColor(11,27,43);
+  doc.rect(0,0,210,28,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(16);
+  doc.text('SEBA CARWASH', 14, 13);
+  doc.setFontSize(10);
+  doc.text('Reporte semanal — corte al ' + hoy, 14, 20);
+
+  doc.setTextColor(20,20,20);
+  doc.setFontSize(11);
+  let y = 42;
+  doc.setFont(undefined,'bold');
+  doc.text('Servicio', 14, y);
+  doc.text('Cant.', 90, y);
+  doc.text('Total', 115, y);
+  doc.text('Comisión (40%)', 145, y);
+  doc.text('Por trabajador', 180, y, {align:'right'});
+  doc.setDrawColor(200,200,200);
+  doc.line(14, y+3, 196, y+3);
+  doc.setFont(undefined,'normal');
+  y += 11;
+
+  let totalGeneral=0, comisionGeneral=0;
+  SERVICES.forEach(s=>{
+    const items = lavados.filter(l=>l.servicioKey===s.key);
+    const total = items.reduce((a,l)=>a+l.precio,0);
+    const com = total*COMISION_PORC;
+    totalGeneral += total; comisionGeneral += com;
+    doc.text(s.name, 14, y);
+    doc.text(String(items.length), 90, y);
+    doc.text(money(total), 115, y);
+    doc.text(money(com), 145, y);
+    doc.text(money(com/TRABAJADORES), 180, y, {align:'right'});
+    y += 9;
+  });
+
+  doc.line(14, y, 196, y);
+  y += 9;
+  doc.setFont(undefined,'bold');
+  doc.text('Totales', 14, y);
+  doc.text(String(lavados.length), 90, y);
+  doc.text(money(totalGeneral), 115, y);
+  doc.text(money(comisionGeneral), 145, y);
+  doc.text(money(comisionGeneral/TRABAJADORES), 180, y, {align:'right'});
+
+  y += 20;
+  doc.setFont(undefined,'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(120,120,120);
+  doc.text('Generado automáticamente por Seba CarWash 4.0', 14, y);
+
+  doc.save('reporte-semanal-seba-carwash.pdf');
+  toast('PDF generado y descargado');
+}
+
+function copyPagoMovil(){
+  const texto = `SEBA CARWASH — Datos de pago móvil\nBanco: 0105 - Banco Mercantil, C.A.\nTitular: Sebastián Ditillo\nCédula: V-32.697.978\nTeléfono: 0424-236.49.61`;
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(texto).then(()=>toast('Datos copiados al portapapeles')).catch(()=>fallbackCopy(texto));
+  } else {
+    fallbackCopy(texto);
+  }
+}
+function fallbackCopy(texto){
+  const ta = document.createElement('textarea');
+  ta.value = texto;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try{
+    document.execCommand('copy');
+    toast('Datos copiados al portapapeles');
+  }catch(e){
+    toast('No se pudo copiar automáticamente — selecciona el texto manualmente');
+  }
+  document.body.removeChild(ta);
+}
+
+buildServiceGrid();
+buildPriceRef();
+renderDashboard();
+</script>
+</body>
+</html>
