@@ -1,1 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winder CarWash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070b14; --panel:#0d1420; --panel2:#141d2e; --line:#22304a;
+    --ice:#f2f4f8; --mist:#8a97ad; --accent:#e0872e; --accent-dim:#a85f1c;
+    --green:#2fbf71; --purple:#9a6ae0; --amber:#e0ac4f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Inter',sans-serif; background:var(--bg); color:var(--ice); min-height:100vh; padding-bottom:78px;}
+  h1,h2,h3{font-family:'Sora',sans-serif;}
+  .topbar{display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--line);}
+  .topbar-left{display:flex; align-items:center; gap:12px;}
+  .menu-ico{width:22px; height:16px; display:flex; flex-direction:column; justify-content:space-between;}
+  .menu-ico span{display:block; height:2px; background:var(--mist); border-radius:2px;}
+  .who b{color:var(--accent); font-size:16px; font-family:'Sora',sans-serif;}
+  .who .role{font-size:11px; color:var(--mist);}
+  .topbar-right{display:flex; align-items:center; gap:14px;}
+  .bell{position:relative; width:34px; height:34px; border-radius:50%; background:var(--panel2); display:flex; align-items:center; justify-content:center;}
+  .bell .dot{position:absolute; top:-2px; right:-2px; background:var(--accent); color:#fff; font-size:9px; font-weight:700; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+  .logo{width:38px; height:38px; border-radius:50%; background:radial-gradient(circle at 35% 30%, var(--accent-dim), #0d1420 70%); border:2px solid var(--accent); display:flex; align-items:center; justify-content:center;}
+  .main{padding:16px;}
+  .greet-row{display:flex; gap:10px; margin-bottom:14px;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
+  .greet-card{flex:1.3; display:flex; align-items:center; gap:12px;}
+  .greet-card .avatar{width:38px; height:38px; border-radius:50%; background:var(--panel2); display:flex; align-items:center; justify-content:center;}
+  .greet-card b{font-size:14.5px; display:block;}
+  .greet-card span{font-size:11.5px; color:var(--mist);}
+  .date-card{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;}
+  .date-card b{font-size:12.5px;}
+  .date-card span{font-size:10.5px; color:var(--mist);}
+  .grid4{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
+  .stat-card{padding:14px;}
+  .stat-icon{width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:8px;}
+  .stat-icon svg{width:18px; height:18px;}
+  .stat-icon.blue{background:#12305c; color:var(--accent);}
+  .stat-icon.green{background:#123a2a; color:var(--green);}
+  .stat-icon.amber{background:#3a2a10; color:var(--amber);}
+  .stat-icon.purple{background:#2a1c4a; color:var(--purple);}
+  .stat-label{font-size:10px; color:var(--mist); text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px;}
+  .stat-value{font-size:19px; font-weight:700; font-family:'Sora',sans-serif;}
+  .stat-link{font-size:10.5px; color:var(--accent); margin-top:3px;}
+  .section-title{font-size:13px; font-weight:600; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;}
+  .section-title .link{font-size:11.5px; color:var(--accent); cursor:pointer;}
+  table{width:100%; border-collapse:collapse; font-size:11.5px;}
+  th{text-align:left; color:var(--mist); font-weight:500; font-size:9.5px; text-transform:uppercase; padding:6px 4px; border-bottom:1px solid var(--line);}
+  td{padding:7px 4px; border-bottom:1px solid var(--panel2);}
+  tr:last-child td{border-bottom:none;}
+  .tag{display:inline-block; padding:2px 7px; border-radius:999px; font-size:9.5px; font-weight:600;}
+  .tag.terminado{background:#123a2a; color:var(--green);}
+  .tag.proceso{background:#3a2f16; color:var(--amber);}
+  .tag.pendiente{background:#3a1f1f; color:#e0736a;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; margin-bottom:14px;}
+  .resumen-row{display:flex; justify-content:space-between; font-size:12px; padding:5px 0; color:var(--mist);}
+  .resumen-row b{color:var(--ice);}
+  .bcv-card{display:flex; flex-direction:column; align-items:center; text-align:center; justify-content:center;}
+  .bcv-card .rate{font-size:17px; font-weight:700; color:var(--accent); font-family:'Sora',sans-serif; margin-top:4px;}
+  .bottom-nav{position:fixed; bottom:0; left:0; right:0; background:var(--panel); border-top:1px solid var(--line); display:flex; z-index:40;}
+  .bottom-nav button{all:unset; flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:9px 0; color:var(--mist); font-size:10px; cursor:pointer;}
+  .bottom-nav button svg{width:18px; height:18px;}
+  .bottom-nav button.active{color:var(--accent);}
+  .fab-bar{position:fixed; bottom:56px; left:0; right:0; padding:0 16px; z-index:39;}
+  .fab{all:unset; display:block; width:100%; text-align:center; background:var(--accent); color:#04070d; font-weight:700; font-size:13.5px; padding:13px; border-radius:12px; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.4);}
+  .view{display:none;} .view.active{display:block;}
+  label{display:block; font-size:10.5px; color:var(--mist); margin-bottom:5px; text-transform:uppercase;}
+  input, select{width:100%; background:var(--panel2); border:1px solid var(--line); color:var(--ice); padding:10px 11px; border-radius:9px; font-size:13.5px; font-family:'Inter',sans-serif; margin-bottom:12px;}
+  input:focus, select:focus{outline:none; border-color:var(--accent);}
+  .btn-row{display:flex; gap:10px;}
+  .btn{all:unset; cursor:pointer; text-align:center; font-weight:600; font-size:13px; padding:11px 16px; border-radius:9px; flex:1;}
+  .btn-primary{background:var(--accent); color:#04070d;}
+  .btn-ghost{border:1px solid var(--line); color:var(--mist);}
+  .empty{text-align:center; padding:26px 0; color:var(--mist); font-size:12px;}
+  .toast{position:fixed; bottom:130px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--panel2); border:1px solid var(--accent); color:var(--ice); padding:10px 16px; border-radius:9px; font-size:12.5px; opacity:0; transition:opacity .25s, transform .25s; pointer-events:none; z-index:80;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  @media (min-width:520px){ .main{max-width:480px; margin:0 auto;} .fab-bar{max-width:480px; margin:0 auto; left:0; right:0;} }
+</style>
+</head>
+<body>
 
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="menu-ico"><span></span><span></span><span></span></div>
+    <div class="who"><b>Winder CarWash</b><div class="role">Empleado</div></div>
+  </div>
+  <div class="topbar-right">
+    <div class="bell"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg><div class="dot" id="notif-count">0</div></div>
+    <div class="logo"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l2-6h14l2 6"/><rect x="3" y="13" width="18" height="6" rx="2"/><circle cx="7.5" cy="19" r="1.5"/><circle cx="16.5" cy="19" r="1.5"/></svg></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- INICIO -->
+  <section class="view active" id="view-inicio">
+    <div class="greet-row">
+      <div class="card greet-card"><div class="avatar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><div><b>¡Hola, Winder!</b><span>¡Sigue así!</span></div></div>
+      <div class="card date-card"><b id="fecha-hoy"></b><span id="dia-hoy"></span></div>
+    </div>
+
+    <div class="grid4">
+      <div class="card stat-card"><div class="stat-icon blue"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l2-6h14l2 6"/><rect x="3" y="13" width="18" height="6" rx="2"/><circle cx="7.5" cy="19" r="1.5"/><circle cx="16.5" cy="19" r="1.5"/></svg></div><div class="stat-label">Servicios hoy</div><div class="stat-value" id="st-servicios">0</div><div class="stat-link" data-view="servicios">Ver detalles</div></div>
+      <div class="card stat-card"><div class="stat-icon green"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 15c0 1.1 1.3 2 3 2s3-.9 3-2-1.3-1.7-3-2-3-.9-3-2 1.3-2 3-2 3 .9 3 2"/></svg></div><div class="stat-label">Comisión hoy</div><div class="stat-value" id="st-comision">$0.00</div><div class="stat-link" style="color:var(--green);">40% de tus servicios</div></div>
+      <div class="card stat-card"><div class="stat-icon amber"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div class="stat-label">Tiempo trabajado</div><div class="stat-value" id="st-tiempo" style="font-size:16px;">0h 0m</div><div class="stat-link" id="turno-toggle" style="color:var(--amber); cursor:pointer;">Iniciar turno</div></div>
+      <div class="card stat-card"><div class="stat-icon purple"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/></svg></div><div class="stat-label">Ventas generadas</div><div class="stat-value" id="st-ventas" style="font-size:16px;">$0.00</div><div class="stat-link" style="color:var(--purple);">Total del día</div></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Mis últimos servicios <span class="link" data-view="servicios">Ver todos →</span></div>
+      <table><thead><tr><th>Hora</th><th>Cliente</th><th>Servicio</th><th>USD</th><th>Estado</th></tr></thead><tbody id="tabla-recientes"></tbody></table>
+      <div class="empty" id="empty-recientes" style="display:none;">Aún no tienes servicios hoy.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="section-title">Resumen del día</div>
+        <div class="resumen-row"><span>Total en USD</span><b id="r-usd">$0.00</b></div>
+        <div class="resumen-row"><span>Total en Bs. (BCV)</span><b id="r-bs">Bs. 0</b></div>
+        <div class="resumen-row"><span>Comisión (40%)</span><b id="r-com-usd">$0.00</b></div>
+        <div class="resumen-row"><span>Comisión en Bs.</span><b id="r-com-bs">Bs. 0</b></div>
+      </div>
+      <div class="card bcv-card">
+        <div class="stat-icon blue" style="margin:0 auto 6px;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h13l-4-4"/><path d="M17 17H4l4 4"/></svg></div>
+        <div class="stat-label">Tasa BCV del día</div>
+        <div class="rate" id="r-tasa">1 USD = -- Bs</div>
+<div style="font-size:10px; color:var(--mist); margin-top:6px;" id="r-tasa-fecha">Sin actualizar</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MIS SERVICIOS -->
+  <section class="view" id="view-servicios">
+    <div class="section-title" style="margin:6px 0 14px;"><h1 style="font-size:16px;">Mis servicios</h1></div>
+    <div class="card">
+      <table><thead><tr><th>Fecha</th><th>Cliente</th><th>Placa</th><th>Servicio</th><th>USD</th><th>Estado</th></tr></thead><tbody id="tabla-todos"></tbody></table>
+      <div class="empty" id="empty-todos" style="display:none;">Aún no has registrado servicios.</div>
+    </div>
+  </section>
+
+  <!-- MIS REPORTES -->
+  <section class="view" id="view-reportes">
+    <div class="section-title" style="margin:6px 0 14px;"><h1 style="font-size:16px;">Mis reportes</h1></div>
+    <div class="card">
+      <div class="resumen-row"><span>Comisión de hoy</span><b id="rep-hoy">$0.00</b></div>
+      <div class="resumen-row"><span>Comisión de la semana</span><b id="rep-semana">$0.00</b></div>
+      <div class="resumen-row"><span>Comisión del mes</span><b id="rep-mes">$0.00</b></div>
+    </div>
+  </section>
+
+  <!-- PERFIL -->
+  <section class="view" id="view-perfil">
+    <div class="section-title" style="margin:6px 0 14px;"><h1 style="font-size:16px;">Perfil</h1></div>
+    <div class="card" style="text-align:center;">
+      <div class="logo" style="width:64px; height:64px; margin:0 auto 10px;"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+      <b style="font-size:15px;">Winder</b>
+      <div style="font-size:12px; color:var(--mist); margin-top:2px;">Empleado — Multiservicios Di Tillo, C.A.</div>
+    </div>
+  </section>
+
+  <!-- NUEVO SERVICIO -->
+  <section class="view" id="view-nuevo">
+    <div class="section-title" style="margin:6px 0 14px;"><h1 style="font-size:16px;">Registrar servicio</h1></div>
+    <div class="card">
+      <label>Cliente</label><input id="f-cliente" placeholder="Nombre del cliente">
+      <label>Placa</label><input id="f-placa" placeholder="AB123CD" style="text-transform:uppercase;">
+      <label>Tipo de servicio</label>
+      <select id="f-servicio">
+        <option value="Moto normal|3">Moto normal — $3</option>
+        <option value="Moto con cera|5">Moto con cera — $5</option>
+        <option value="Carro|7">Carro — $7</option>
+        <option value="Camioneta|15">Camioneta — $15</option>
+        <option value="Lavado completo|25">Lavado completo — $25</option>
+      </select>
+      <label>Estado</label>
+      <select id="f-estado"><option>Pendiente</option><option>En proceso</option><option>Terminado</option></select>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="showView('inicio')">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarServicio()">Guardar</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="fab-bar" id="fab-bar"><button class="fab" onclick="showView('nuevo')">+ Registrar Nuevo Servicio</button></div>
+
+<div class="bottom-nav">
+  <button class="active" data-view="inicio"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Inicio</span></button>
+  <button data-view="servicios"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l2-6h14l2 6"/><rect x="3" y="13" width="18" height="6" rx="2"/><circle cx="7.5" cy="19" r="1.5"/><circle cx="16.5" cy="19" r="1.5"/></svg><span>Mis Servicios</span></button>
+  <button data-view="reportes"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/></svg><span>Mis Reportes</span></button>
+  <button data-view="perfil"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>Perfil</span></button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'emp_winder';
+const TURNO_KEY = 'emp_winder_turno';
+const COMISION_PORC = 0.4;
+
+function loadArr(key){ try{ const v=JSON.parse(localStorage.getItem(key)||'[]'); return Array.isArray(v)?v:[]; }catch(e){ return []; } }
+function saveArr(key,val){ localStorage.setItem(key, JSON.stringify(val)); }
+let servicios = loadArr(STORAGE_KEY);
+let tasaBCV = JSON.parse(localStorage.getItem('dt_tasa') || 'null') || {valor:0, fecha:null};
+let turno = JSON.parse(localStorage.getItem(TURNO_KEY) || 'null');
+
+function money(n){ return '$' + (n||0).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+function bs(n){ return 'Bs. ' + Math.round((n||0)*(tasaBCV.valor||0)).toLocaleString('es-VE'); }
+function isToday(iso){ const d=new Date(iso), n=new Date(); return d.toDateString()===n.toDateString(); }
+function isThisWeek(iso){ const d=new Date(iso), n=new Date(); const start=new Date(n); start.setDate(n.getDate()-n.getDay()); start.setHours(0,0,0,0); return d>=start; }
+function isThisMonth(iso){ const d=new Date(iso), n=new Date(); return d.getMonth()===n.getMonth() && d.getFullYear()===n.getFullYear(); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+function estClass(e){ return e==='Terminado' ? 'terminado' : (e==='En proceso' ? 'proceso' : 'pendiente'); }
+
+document.querySelectorAll('[data-view]').forEach(el=>{
+  el.addEventListener('click', ()=>showView(el.dataset.view));
+});
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.bottom-nav button[data-view]').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+  document.getElementById('fab-bar').style.display = (name==='nuevo') ? 'none' : 'block';
+  if(name==='servicios') renderTodos();
+  if(name==='reportes') renderReportes();
+}
+
+function guardarServicio(){
+  const cliente = document.getElementById('f-cliente').value.trim();
+  const placa = document.getElementById('f-placa').value.trim().toUpperCase();
+  if(!cliente || !placa){ toast('Falta cliente o placa'); return; }
+  const [nombre, precio] = document.getElementById('f-servicio').value.split('|');
+  const reg = {
+    id: Date.now(), fecha: new Date().toISOString(),
+    cliente, placa, servicio: nombre, precioUSD: +precio,
+    tasaUsada: tasaBCV.valor, estado: document.getElementById('f-estado').value,
+  };
+  servicios.unshift(reg); saveArr(STORAGE_KEY, servicios);
+  toast('Servicio guardado');
+  document.getElementById('f-cliente').value=''; document.getElementById('f-placa').value='';
+  document.getElementById('f-servicio').selectedIndex=0; document.getElementById('f-estado').selectedIndex=0;
+  renderInicio(); showView('inicio');
+}
+
+function renderInicio(){
+  const hoy = servicios.filter(s=>isToday(s.fecha));
+  const totalUSD = hoy.reduce((a,s)=>a+s.precioUSD,0);
+  const comUSD = totalUSD * COMISION_PORC;
+  document.getElementById('st-servicios').textContent = hoy.length;
+  document.getElementById('st-comision').textContent = money(comUSD);
+  document.getElementById('st-ventas').textContent = money(totalUSD);
+  document.getElementById('r-usd').textContent = money(totalUSD);
+  document.getElementById('r-bs').textContent = bs(totalUSD);
+  document.getElementById('r-com-usd').textContent = money(comUSD);
+  document.getElementById('r-com-bs').textContent = bs(comUSD);
+  document.getElementById('r-tasa').textContent = '1 USD = ' + (tasaBCV.valor ? tasaBCV.valor.toLocaleString('es-VE') : '--') + ' Bs';
+  document.getElementById('r-tasa-fecha').textContent = tasaBCV.fecha ? 'Actualizado: ' + new Date(tasaBCV.fecha).toLocaleDateString('es-VE') : 'Sin actualizar';
+
+  const tb = document.getElementById('tabla-recientes');
+  document.getElementById('empty-recientes').style.display = hoy.length ? 'none' : 'block';
+  tb.innerHTML = hoy.slice(0,5).map(s=>`<tr>
+    <td>${new Date(s.fecha).toLocaleTimeString('es-VE',{hour:'2-digit',minute:'2-digit'})}</td>
+    <td>${s.cliente}</td><td>${s.servicio}</td><td>${money(s.precioUSD)}</td>
+    <td><span class="tag ${estClass(s.estado)}">${s.estado}</span></td>
+  </tr>`).join('');
+
+  const fecha = new Date();
+  document.getElementById('fecha-hoy').textContent = fecha.toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit',year:'numeric'});
+  document.getElementById('dia-hoy').textContent = fecha.toLocaleDateString('es-VE',{weekday:'long'});
+  renderTurno();
+}
+
+function renderTodos(){
+  const tb = document.getElementById('tabla-todos');
+  document.getElementById('empty-todos').style.display = servicios.length ? 'none' : 'block';
+  tb.innerHTML = servicios.map(s=>`<tr>
+    <td>${new Date(s.fecha).toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit'})}</td>
+    <td>${s.cliente}</td><td>${s.placa}</td><td>${s.servicio}</td><td>${money(s.precioUSD)}</td>
+    <td><span class="tag ${estClass(s.estado)}">${s.estado}</span></td>
+  </tr>`).join('');
+}
+
+function renderReportes(){
+  const com = arr => arr.reduce((a,s)=>a+s.precioUSD,0) * COMISION_PORC;
+  document.getElementById('rep-hoy').textContent = money(com(servicios.filter(s=>isToday(s.fecha))));
+  document.getElementById('rep-semana').textContent = money(com(servicios.filter(s=>isThisWeek(s.fecha))));
+  document.getElementById('rep-mes').textContent = money(com(servicios.filter(s=>isThisMonth(s.fecha))));
+}
+
+function renderTurno(){
+  const btn = document.getElementById('turno-toggle');
+  if(turno && turno.activo){
+    const mins = Math.floor((Date.now() - new Date(turno.inicio).getTime())/60000);
+    document.getElementById('st-tiempo').textContent = Math.floor(mins/60)+'h '+(mins%60)+'m';
+    btn.textContent = 'Terminar turno';
+  } else {
+    document.getElementById('st-tiempo').textContent = turno && turno.totalMin ? Math.floor(turno.totalMin/60)+'h '+(turno.totalMin%60)+'m' : '0h 0m';
+    btn.textContent = 'Iniciar turno';
+  }
+}
+document.getElementById('turno-toggle').addEventListener('click', ()=>{
+  if(turno && turno.activo){
+    const mins = Math.floor((Date.now() - new Date(turno.inicio).getTime())/60000);
+    turno = {activo:false, totalMin:(turno.totalMin||0)+mins};
+    toast('Turno terminado');
+  } else {
+    turno = {activo:true, inicio:new Date().toISOString(), totalMin:(turno&&turno.totalMin)||0};
+    toast('Turno iniciado');
+  }
+  localStorage.setItem(TURNO_KEY, JSON.stringify(turno));
+  renderTurno();
+});
+setInterval(()=>{ if(turno && turno.activo) renderTurno(); }, 30000);
+
+renderInicio();
+</script>
+</body>
+</html>
